@@ -62,13 +62,14 @@ function getListofProducts() {
             console.log(chalk.gray.strikethrough(list + ' OUT OF STOCK'));
         }
     });
+
     // call sellProducts to start the questions
     sellProducts();
 }
 
-var updateProducts = function(product_name, amount_purchased, cost) {
-    var queryProducts = 'UPDATE products SET stock_quantity = stock_quantity - ? WHERE ?';
-    connection.query(queryProducts, [amount_purchased, { product_name: product_name }], function(error, results) {
+var updateProducts = function(product_name, amount_purchased, cost, sales) {
+    var queryProducts = 'UPDATE products SET stock_quantity = stock_quantity - ?, product_sales = ? WHERE ?';
+    connection.query(queryProducts, [amount_purchased, sales, { product_name: product_name }], function(error, results) {
         if (error) throw error; 
         console.log(chalk.greenBright('You purchased ' + product_name + ' at a quantity of ' + amount_purchased +
             '.\nYour total amount charged is $' + cost.toFixed(2) + '.' ));
@@ -83,9 +84,10 @@ function sellProducts() {
                 name: 'prod_id',
                 message: chalk.cyan('What is the ID of the product you want to buy?'),
                 validate: function(value) {
-                    if (products[value-1].stock_quantity < 1) {
-                        return 'Out of stock! Choose another item!';
-                    } else if (/[0-9]/i.test(value) && value > 0 && value <= products.length) {
+                    if (/[0-9]/g.test(value) && value > 0 && value <= products.length) {
+                        if (products[value-1].stock_quantity < 1) {
+                            return 'Out of stock! Choose another item!';
+                        }
                         return true;
                     }
                     return 'Enter a valid ID!';
@@ -98,14 +100,15 @@ function sellProducts() {
                     name: 'quantity',
                     message: chalk.cyan('How many do you wish to buy?'),
                     validate: function(value) {
-                        if (/[0-9]/i.test(value) && value > 0 && value <= products[id_answer.prod_id-1].stock_quantity) {
+                        if (/[0-9]/g.test(value) && value > 0 && value <= products[id_answer.prod_id-1].stock_quantity) {
                             return true;
                         }
                         return chalk.redBright('Enter in a valid stock quantity');
                     }
                 }).then(function(quantity_answer) {
                     var cost = products[id_answer.prod_id-1].price * quantity_answer.quantity;
-                    updateProducts(products[id_answer.prod_id-1].product_name, quantity_answer.quantity, cost);
+                    var sales = products[id_answer.prod_id-1].product_sales + cost;
+                    updateProducts(products[id_answer.prod_id-1].product_name, quantity_answer.quantity, cost, sales);
             });
         });    
 }
