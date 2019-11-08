@@ -6,7 +6,7 @@ require("console.table");
 const connection = require("./dbConnection");
 
 // gets products from the database and updates the products variable
-// paramater is a boolean to identify if manager wants to see low inventory (true)
+// parameter is a boolean to identify if manager wants to see low inventory (true)
 function getProducts(showLowInventory) {
   console.log("\n");
   if (!showLowInventory) {
@@ -16,7 +16,7 @@ function getProducts(showLowInventory) {
   }
   connection.query(queryProducts, function(error, results) {
     if (error) {
-      console.log(chalk.red("Connection error occured!"));
+      console.log(chalk.red("Connection error occurred!"));
     } else {
       console.table(results);
     }
@@ -28,7 +28,7 @@ function addInventory() {
   var queryProducts = "SELECT * FROM products";
   connection.query(queryProducts, function(error, results) {
     if (error) {
-      console.log(chalk.red("Connection error occured!"));
+      console.log(chalk.red("Connection error occurred!"));
     } else {
       console.table(results);
       inquirer
@@ -91,7 +91,7 @@ function addProduct() {
   var deptQuery = "SELECT * FROM departments";
   connection.query(deptQuery, function(error, results) {
     if (error) {
-      console.log(chalk.red("Connection error occured!"));
+      console.log(chalk.red("Connection error occurred!"));
     } else {
       var departments = [];
       results.forEach(row => {

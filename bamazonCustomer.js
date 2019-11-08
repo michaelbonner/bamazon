@@ -13,20 +13,20 @@ function getProducts() {
   var queryProducts = "SELECT * FROM products";
   connection.query(queryProducts, function(error, results) {
     if (error) {
-      console.log("Connection error occured!");
+      console.log("Connection error occurred!");
     } else {
       products = results;
     }
     // if this is the first time its ran get a list of products
     if (runFirstTime) {
-      getListofProducts();
-      // set runFirstTime to false so that it doesnt run again
+      getListOfProducts();
+      // set runFirstTime to false so that it doesn't run again
       runFirstTime = false;
     }
   });
 }
 
-function getListofProducts() {
+function getListOfProducts() {
   console.log("\n");
   // table headers
   console.log(chalk.magentaBright.underline("ID:\t|\tProduct      \t|\tPrice"));
@@ -167,7 +167,7 @@ function buyAgain() {
     })
     .then(function(answer) {
       if (answer.again) {
-        getListofProducts();
+        getListOfProducts();
       } else {
         connection.end();
       }

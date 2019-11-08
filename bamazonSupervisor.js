@@ -6,12 +6,12 @@ require("console.table");
 const connection = require("./dbConnection");
 
 function viewProductSales() {
-  var queryDepts =
+  var queryDepartments =
     "SELECT a.dept_id, a.dept_name, a.over_head_costs, SUM(b.product_sales) AS total_sales, " +
     "SUM(b.product_sales) - a.over_head_costs AS total_profit  " +
     "FROM departments a INNER JOIN products b ON a.dept_name = b.department_name " +
     "GROUP BY b.department_name;";
-  connection.query(queryDepts, function(error, results) {
+  connection.query(queryDepartments, function(error, results) {
     if (error) {
       console.log(chalk.red("There was an error querying the data."));
     } else {
